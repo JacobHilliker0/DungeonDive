@@ -14,9 +14,9 @@ public abstract class DungeonElement {
      * enters the same tile or actively interacts with the element.
      * Each subclass must implement this method to specify its unique behavior.
      *
-     * @param hero The hero that is interacting with this element.
+     * @param theHero The hero that is interacting with this element.
      */
-    public abstract void interact(Hero hero);
+    public abstract void interact(final Hero theHero);
 
     /**
      * A textual representation of the dungeon element, often for display or logging.

@@ -91,6 +91,7 @@ public class GameScreen extends Screen {
         helpButton.setOnAction(event -> getController().helpMenu(event, theUI));
         pauseButton.setOnAction(event -> getController().pauseGame(event, theUI));
         pauseAndHelpButtons.getChildren().addAll(helpButton, pauseButton);
+        pauseAndHelpButtons.setPadding(new Insets(0, 0, 5, 0));
         topPane.setRight(pauseAndHelpButtons);
 
         // Add the topPane to the root
@@ -319,7 +320,7 @@ public class GameScreen extends Screen {
     /**
      * Gets a symbol representation for a room type.
      */
-    private String getRoomSymbol(Room room) {
+    private String getRoomSymbol(final Room room) {
         switch (room.getRoomType()) {
             case ENTRANCE: return "E";
             case EXIT: return "X";
@@ -342,7 +343,7 @@ public class GameScreen extends Screen {
      * Adds a message to the game's message log area.
      * @param message The message string to add.
      */
-    public void addGameMessage(String message) {
+    public void addGameMessage(final String message) {
         if (myMessagesArea != null) {
             Label messageLabel = new Label(message);
             myMessagesArea.getChildren().add(messageLabel);

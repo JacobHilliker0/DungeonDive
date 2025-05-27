@@ -1,8 +1,5 @@
 package main.Controller;
 
-import main.Model.Model;
-import main.View.GameUI;
-
 public class StateController {
     private GameState currentState;
 
@@ -27,12 +24,12 @@ public class StateController {
     /**
      * Changes current game state
      *
-     * @param newState new state to change to
+     * @param theNewState new state to change to
      */
-    public void changeState(GameState newState) {
-        if (newState != currentState) {
-            System.out.println("Game state changing from " + currentState + " to " + newState);
-            this.currentState = newState;
+    public void changeState(final GameState theNewState) {
+        if (theNewState != currentState) {
+            System.out.println("Game state changing from " + currentState + " to " + theNewState);
+            this.currentState = theNewState;
         }
     }
 
@@ -47,11 +44,11 @@ public class StateController {
     /**
      * checks if game is currently in specified state.
      *
-     * @param state state to check against
+     * @param theState state to check against
      * @return True if current state matches specified state
      */
-    public boolean isInState(GameState state) {
-        return currentState == state;
+    public boolean isInState(final GameState theState) {
+        return currentState == theState;
     }
 
     public boolean isInCombat() {

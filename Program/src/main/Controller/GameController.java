@@ -32,7 +32,7 @@ public class GameController {
      * @param theGameUI  game UI displaying game state
      * @param theStateController state controller tracking game state
      */
-    public GameController(Model theGameModel, GameUI theGameUI, StateController theStateController) {
+    public GameController(final Model theGameModel, final GameUI theGameUI, final StateController theStateController) {
         if (theGameModel == null) {
             throw new IllegalArgumentException("Game model cannot be null for GameController.");
         }
@@ -49,13 +49,13 @@ public class GameController {
         System.out.println("GameController initialized with model, UI, and state controller");
     }
 
-    public void startPlayerMovement(Direction direction) {
+    public void startPlayerMovement(final Direction theDirection) {
         if (!myStateController.isInState(GameState.EXPLORING)) {
             return;
         }
 
         Hero player = myGameModel.getPlayer();
-        player.startMoving(direction);
+        player.startMoving(theDirection);
     }
 
     public void stopPlayerMovement() {
@@ -191,7 +191,7 @@ public class GameController {
      *
      * @param room The room being entered
      */
-    private void enterRoom(Room room) {
+    private void enterRoom(final Room room) {
         // Mark room as visited
         room.setVisited(true);
 
@@ -230,7 +230,7 @@ public class GameController {
      *
      * @param room The room containing the trap
      */
-    private void activateTrap(Room room) {
+    private void activateTrap(final Room room) {
         Hero player = myGameModel.getPlayer();
         int damage = room.getTrap().getDamage();
 
@@ -250,7 +250,7 @@ public class GameController {
      *
      * @param room The room containing the pillar
      */
-    private void activatePillar(Room room) {
+    private void activatePillar(final Room room) {
         if (room.hasPillar() && !room.getPillar().isActivated()) {
             Pillar pillar = room.getPillar();
             boolean activated = myGameModel.getPlayer().activatePillar(pillar);
@@ -259,6 +259,7 @@ public class GameController {
                 //update UI to show pillar activation and stat changes
                 myGameUI.showPillarActivated(pillar);
                 myGameUI.updatePlayerStats();
+                myGameModel.getDungeon().recordPillarActivation();
 
                 //check if all pillars activated (win condition)
                 checkWinCondition();
@@ -324,7 +325,7 @@ public class GameController {
      *
      * @param room The room containing items
      */
-    private void collectItems(Room room) {
+    private void collectItems(final Room room) {
         List<Item> items = room.getItems();
         if (!items.isEmpty()) {
             for (Item item : items) {
@@ -470,6 +471,10 @@ public class GameController {
         // I'll just keep it as comment for now.
         //target.takeDamage(damage);
         System.out.println("Player attacked " + target.getName() + " for " + damage + " damage!");
+        myGameUI.getCombatScreen().addGameMessage("Player attacked " + target.getName() +
+                " for " + damage + " damage!");
+        myGameUI.getCombatScreen().addGameMessage(target.getName() + " health: " + target.getHealth() +
+                "/" + target.getMaxHealth());
 
         //check if monster is defeated
         if (target.getHealth() <= 0) {
@@ -524,6 +529,10 @@ public class GameController {
 
         target.takeDamage(damage);
         System.out.println("Player used special attack on " + target.getName() + " for " + damage + " damage!");
+        myGameUI.getCombatScreen().addGameMessage("Player used special attack on " + target.getName() + " for " +
+                damage + " damage!");
+        myGameUI.getCombatScreen().addGameMessage(target.getName() + " health: " + target.getHealth() + "/" +
+                target.getMaxHealth());
 
         // Check if monster is defeated
         if (target.getHealth() <= 0) {
@@ -560,6 +569,10 @@ public class GameController {
             if (monster.isAlive()) { // Only living monsters attack
                 int damage = monster.attack(player); // attack should call takeDamage
                 System.out.println(monster.getName() + " attacked player for " + damage + " damage!");
+                myGameUI.getCombatScreen().addGameMessage(monster.getName() + " attacked for " + damage +
+                        " damage!");
+                myGameUI.getCombatScreen().addGameMessage(player.getName() + " health: " +
+                        player.getHealth() + "/" + player.getMaxHealth());
                 myGameUI.showMonsterAttackEffect(monster, damage);
             }
         }
@@ -585,6 +598,7 @@ public class GameController {
             endCombat();
         } else {
             System.out.println("Failed to run away!");
+            myGameUI.getCombatScreen().addGameMessage("Failed to run away!");
             myGameUI.showRunFailedMessage();
 
             // Monsters get a free attack when run fails
@@ -690,11 +704,11 @@ public class GameController {
     /**
      * Loads saved game state
      *
-     * @param saveId ID of save to load
+     * @param theSaveId ID of save to load
      * @return True if game was loaded successfully
      */
-    public boolean loadGame(String saveId) {
-        boolean loaded = myGameModel.loadGame(saveId);
+    public boolean loadGame(final String theSaveId) {
+        boolean loaded = myGameModel.loadGame(theSaveId);
 
         if (loaded) {
             // Update state based on loaded game

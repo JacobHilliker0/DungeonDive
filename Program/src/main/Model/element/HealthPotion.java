@@ -15,7 +15,7 @@ public class HealthPotion extends Item {
      * @param description The description of the potion.
      * @param healingAmount The amount of health this potion restores.
      */
-    public HealthPotion(String name, String description, int healingAmount) {
+    public HealthPotion(final String name, final String description, final int healingAmount) {
         super(name, description); // Call the constructor of the parent Item class
         this.healingAmount = healingAmount;
     }
@@ -26,7 +26,7 @@ public class HealthPotion extends Item {
      * @param hero The hero using the potion.
      */
     @Override
-    public void use(Hero hero) {
+    public void use(final Hero hero) {
         if (hero != null && hero.isAlive()) {
             hero.setHealth(Math.min(hero.getMaxHealth(), hero.getHealth() + this.healingAmount)); // Assuming Hero has getMaxHealth()
             System.out.println(hero.getName() + " used " + getName() + " and restored " + this.healingAmount + " health.");

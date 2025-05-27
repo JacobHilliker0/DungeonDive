@@ -76,7 +76,7 @@ public class Hero extends Character { // Make sure Character is in main.Model.ch
         // etc.
     }
 
-    public void startMoving(Direction direction) {
+    public void startMoving(final Direction direction) {
         myMoveDirection = direction;
         myFacingDirection = direction;
         myIsMoving = true;
@@ -202,7 +202,7 @@ public class Hero extends Character { // Make sure Character is in main.Model.ch
      * @param theHealth The new health value.
      */
     @Override
-    public void setHealth(int theHealth) {
+    public void setHealth(final int theHealth) {
         super.setHealth(Math.min(theHealth, this.myMaxHealth));
     }
 
@@ -242,7 +242,7 @@ public class Hero extends Character { // Make sure Character is in main.Model.ch
      * @param damageAmount The amount of damage to take.
      */
     @Override
-    public void takeDamage(int damageAmount) {
+    public void takeDamage(final int damageAmount) {
         super.takeDamage(damageAmount); // Calls Character's takeDamage logic
         System.out.println(myName + " takes " + damageAmount + " damage. Current health: " + getHealth() + "/" + myMaxHealth);
         if (!isAlive()) {
@@ -257,7 +257,7 @@ public class Hero extends Character { // Make sure Character is in main.Model.ch
      * @param item item to add
      * @return true if item was added successfully, false otherwise
      */
-    public boolean addItem(Item item) {
+    public boolean addItem(final Item item) {
         return pickupItem(item); // Use existing pickupItem method
     }
 
@@ -267,7 +267,7 @@ public class Hero extends Character { // Make sure Character is in main.Model.ch
      * @param pillar The pillar to activate
      * @return true if the pillar was successfully activated
      */
-    public boolean activatePillar(Pillar pillar) {
+    public boolean activatePillar(final Pillar pillar) {
         if (pillar == null || pillar.isActivated()) {
             return false;
         }

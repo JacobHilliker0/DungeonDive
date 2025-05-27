@@ -10,7 +10,6 @@ import main.Model.util.Point;
 import main.Model.util.RoomType;
 import java.util.ArrayList;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -163,13 +162,13 @@ public class Room {
 
     //  Door Management
     public boolean hasNorthDoor() { return myHasNorthDoor; }
-    public void setNorthDoor(boolean hasDoor) { myHasNorthDoor = hasDoor; }
+    public void setNorthDoor(final boolean theHasDoor) { myHasNorthDoor = theHasDoor; }
     public boolean hasEastDoor() { return myHasEastDoor; }
-    public void setEastDoor(boolean hasDoor) { myHasEastDoor = hasDoor; }
+    public void setEastDoor(final boolean theHasDoor) { myHasEastDoor = theHasDoor; }
     public boolean hasSouthDoor() { return myHasSouthDoor; }
-    public void setSouthDoor(boolean hasDoor) { myHasSouthDoor = hasDoor; }
+    public void setSouthDoor(final boolean theHasDoor) { myHasSouthDoor = theHasDoor; }
     public boolean hasWestDoor() { return myHasWestDoor; }
-    public void setWestDoor(boolean hasDoor) { myHasWestDoor = hasDoor; }
+    public void setWestDoor(final boolean theHasDoor) { myHasWestDoor = theHasDoor; }
 
 
     /**
@@ -198,10 +197,10 @@ public class Room {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Room room = (Room) o;
+    public boolean equals(final Object theO) {
+        if (this == theO) return true;
+        if (theO == null || getClass() != theO.getClass()) return false;
+        Room room = (Room) theO;
         return Objects.equals(myPosition, room.myPosition); // Rooms are unique by position in a dungeon
     }
 

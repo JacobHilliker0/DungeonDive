@@ -1,13 +1,12 @@
 package main.View.screen;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -15,6 +14,7 @@ import javafx.stage.Stage;
 import main.Controller.Controller;
 import main.Model.character.Hero;
 import main.Model.character.Monster;
+import main.Model.util.HeroType;
 import main.View.GameUI;
 
 import java.util.ArrayList;
@@ -39,26 +39,45 @@ public class CombatScreen extends Screen {
         super(thePrimaryStage, theController);
     }
 
-    public void showScreen(GameUI theUI, List<Monster> theMonsters) {
+    public void showScreen(final GameUI theUI, final List<Monster> theMonsters) {
         BorderPane root = new BorderPane();
         Scene CombatScene = new Scene(root, 800, 500);
         root.setStyle("-fx-padding: 10;");
+
+        // This may not be good code, but helps with finding stats for printing later.
+        HeroType player = getController().getPlayer().getType();
+
+        HBox pauseAndHelpButtons = new HBox(10);
+        Button helpButton = new Button("Help/Controls");
+        Button pauseButton = new Button("Pause");
+        setButtonSize(helpButton);
+        setButtonSize(pauseButton);
+        helpButton.setOnAction(event -> getController().helpMenu(event, theUI));
+        pauseButton.setOnAction(event -> getController().pauseGame(event, theUI));
+        pauseAndHelpButtons.getChildren().addAll(helpButton, pauseButton);
+        pauseAndHelpButtons.setAlignment(Pos.TOP_RIGHT);
+        pauseAndHelpButtons.setPadding(new Insets(0, 0, 5, 0));
+        root.setTop(pauseAndHelpButtons);
 
         // Player stats vbox
         VBox playerStatsBox = new VBox(10);
         myName = new Label("Name: ");
         myHealth = new Label("Health: ");
+        myBaseDamage = new Label("Base Attack: " + player.getBaseAttack());
+        mySpecialDamage = new Label(player.getSpecialAttackName() + ": " + player.getSpecialAttackDamage());
         myBlockChance = new Label("Block Chance: ?");
-        playerStatsBox.getChildren().addAll(new Label("--- Player ---"), myName, myHealth, myBlockChance);
+        playerStatsBox.getChildren().addAll(new Label("--- Player ---"), myName, myHealth, myBaseDamage, mySpecialDamage, myBlockChance);
         playerStatsBox.setAlignment(Pos.CENTER_LEFT);
+        playerStatsBox.setBackground(new Background(new BackgroundFill(Color.CYAN, CornerRadii.EMPTY, null)));
 
-// Monster stats
+        // Monster stats
         VBox monsterStatsBox = new VBox(5);
         enemyNameLabel = new Label("Name: ");
         enemyHealthLabel = new Label("Health: ");
         enemyAttackLabel = new Label("Attack: "); // Example
         monsterStatsBox.getChildren().addAll(new Label("--- Monster ---"), enemyNameLabel, enemyHealthLabel, enemyAttackLabel);
         monsterStatsBox.setAlignment(Pos.CENTER_LEFT);
+        monsterStatsBox.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, null)));
 
         VBox statsBox = new VBox(20, playerStatsBox, monsterStatsBox);
         statsBox.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 1;");
@@ -70,20 +89,20 @@ public class CombatScreen extends Screen {
         combatOptions.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 1;");
         Label combatOptionsLabel = new Label("--- Combat Options ---");
         Button attackButton = new Button("Base Attack");
-        Button specialAttackButton = new Button(getController().getPlayer().getType().getSpecialAttackName());
+        Button specialAttackButton = new Button(player.getSpecialAttackName());
+        Button inventoryButton = new Button("Inventory");
         Button runButton = new Button("Run");
         setButtonSize(attackButton);
         setButtonSize(specialAttackButton);
+        setButtonSize(inventoryButton);
         setButtonSize(runButton);
 
         attackButton.setOnAction(event -> getController().getGameController().playerAttack());
         specialAttackButton.setOnAction(event -> getController().getGameController().playerSpecialAttack());
+        inventoryButton.setOnAction(event -> getController().getGameController().openInventory());
         runButton.setOnAction(event -> getController().getGameController().playerRun());
 
-        myBaseDamage = new Label("Damage: ");
-        mySpecialDamage = new Label("Damage: ");
-        combatOptions.getChildren().addAll(combatOptionsLabel, attackButton, myBaseDamage,
-                                           specialAttackButton, mySpecialDamage, runButton);
+        combatOptions.getChildren().addAll(combatOptionsLabel, attackButton, specialAttackButton, inventoryButton, runButton);
         combatOptions.setAlignment(Pos.CENTER);
         root.setRight(combatOptions);
 
@@ -93,6 +112,9 @@ public class CombatScreen extends Screen {
         ScrollPane messageScrollPane = new ScrollPane(myCombatMessages);
         messageScrollPane.setPrefHeight(100);
         messageScrollPane.setFitToWidth(true);
+        messageScrollPane.setPrefHeight(100);myCombatMessages.heightProperty().addListener((obs, oldVal, newVal) -> {
+            messageScrollPane.setVvalue(1.0); // Set Vvalue to 1.0 (scroll to bottom)
+        });
         root.setBottom(messageScrollPane);
 
         // Set current monster and update stats
@@ -136,14 +158,10 @@ public class CombatScreen extends Screen {
 //        }
 //    }
 
-    public void addGameMessage(String message) {
+    public void addGameMessage(final String message) {
         if (myCombatMessages != null) {
             Label messageLabel = new Label(message);
             myCombatMessages.getChildren().add(messageLabel);
-            // Auto-scroll to bottom
-            if (myCombatMessages.getParent() instanceof ScrollPane) {
-                ((ScrollPane)myCombatMessages.getParent()).setVvalue(1.0);
-            }
         }
     }
 
@@ -151,7 +169,7 @@ public class CombatScreen extends Screen {
      * Updates which monster is being displayed (if you have multiple).
      * @param monster The new monster to display.
      */
-    public void updateCurrentMonster(Monster monster) {
+    public void updateCurrentMonster(final Monster monster) {
         this.currentMonster = monster;
         updateCombatStats();
     }
@@ -161,7 +179,7 @@ public class CombatScreen extends Screen {
      * Call this when monster health changes or a new monster is targeted.
      * @param monsters The current list of monsters.
      */
-    public void updateDisplay(List<Monster> monsters) {
+    public void updateDisplay(final List<Monster> monsters) {
         System.out.println("CombatScreen: Updating display."); // Log to see if it's called
         if (monsters != null && !monsters.isEmpty()) {
             // Update to the first monster (or implement logic for multiple)
@@ -179,8 +197,8 @@ public class CombatScreen extends Screen {
         if (player != null) {
             myName.setText("Name: " + player.getName());
             myHealth.setText("Health: " + player.getHealth() + " / " + player.getMaxHealth());
-            myBaseDamage.setText("Damage: " + player.getType().getBaseAttack());
-            mySpecialDamage.setText("Damage: " + player.getType().getSpecialAttackDamage());
+            myBaseDamage.setText("Base Attack: " + player.getType().getBaseAttack());
+            mySpecialDamage.setText(player.getType().getSpecialAttackName() + ": " + player.getType().getSpecialAttackDamage());
         }
 
         // Update monster stats
@@ -195,11 +213,12 @@ public class CombatScreen extends Screen {
         }
     }
 
+
     // You need to override the abstract showScreen(GameUI theUI) from Screen.
     // Since we now have showScreen(GameUI theUI, List<Monster> theMonsters),
     // we can provide a default implementation or throw an error.
     @Override
-    public void showScreen(GameUI theUI) {
+    public void showScreen(final GameUI theUI) {
         // This shouldn't be called directly for CombatScreen anymore.
         // Or, you could show it with an empty monster list / error.
         System.err.println("CombatScreen.showScreen(GameUI) called without monster list! Showing empty screen.");

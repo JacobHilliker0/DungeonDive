@@ -16,12 +16,12 @@ import main.View.GameUI;
 
 public class HelpScreen extends Screen {
 
-    public HelpScreen(Stage thePrimaryStage, Controller theController) {
+    public HelpScreen(final Stage thePrimaryStage, final Controller theController) {
         super(thePrimaryStage, theController);
 
     }
     @Override
-    public void showScreen(GameUI theUI) {
+    public void showScreen(final GameUI theUI) {
         BorderPane root = new BorderPane();
         Scene helpScene = new Scene(root, 600, 500);
 

@@ -63,7 +63,7 @@ public abstract class Screen { // Changed to public if accessed from other packa
      *
      * @param theUI The GameUI instance, used for managing screen transitions and UI updates.
      */
-    public abstract void showScreen(GameUI theUI); // Changed to public
+    public abstract void showScreen(final GameUI theUI); // Changed to public
 
     /**
      * Method for all screen classes to create button sizes quickly
@@ -71,7 +71,7 @@ public abstract class Screen { // Changed to public if accessed from other packa
      *
      * @param theButton the Button to be given a size.
      */
-    public void setButtonSize(Button theButton) {
+    public void setButtonSize(final Button theButton) {
         if (theButton != null) {
             theButton.setPrefWidth(BUTTON_WIDTH);
             theButton.setPrefHeight(BUTTON_HEIGHT);
@@ -114,8 +114,8 @@ public abstract class Screen { // Changed to public if accessed from other packa
      * @param theButtons The VBox containing buttons.
      * @param theRoot The BorderPane root layout.
      */
-    public void tripleButtonStructure(Text theTitle, VBox theButtons,
-                                      BorderPane theRoot) {
+    public void tripleButtonStructure(final Text theTitle, final VBox theButtons,
+                                      final BorderPane theRoot) {
         if (theTitle != null) {
             BorderPane.setAlignment(theTitle, Pos.TOP_CENTER);
             theRoot.setTop(theTitle);

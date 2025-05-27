@@ -40,10 +40,10 @@ public class InputController {
     /**
      * Handles key pressed events based on the current game state.
      *
-     * @param event The KeyEvent representing the key press.
+     * @param theEvent The KeyEvent representing the key press.
      */
-    public void handleKeyPress(KeyEvent event) {
-        KeyCode code = event.getCode();
+    public void handleKeyPress(final KeyEvent theEvent) {
+        KeyCode code = theEvent.getCode();
         System.out.println("Key Pressed: " + code + " in state: " + myStateController.getCurrentState());
 
         // Handle input based on current game state
@@ -69,7 +69,7 @@ public class InputController {
                 break;
         }
 
-        event.consume();
+        theEvent.consume();
     }
 
     /**
@@ -77,7 +77,7 @@ public class InputController {
      *
      * @param code The key code pressed
      */
-    private void handleExplorationInput(KeyCode code) {
+    private void handleExplorationInput(final KeyCode code) {
         switch (code) {
             case UP:
             case W:
@@ -102,10 +102,10 @@ public class InputController {
     /**
      * Handles key released events.
      *
-     * @param event The KeyEvent representing the key release.
+     * @param theEvent The KeyEvent representing the key release.
      */
-     public void handleKeyRelease(KeyEvent event) {
-        KeyCode code = event.getCode();
+     public void handleKeyRelease(final KeyEvent theEvent) {
+        KeyCode code = theEvent.getCode();
 
         if (myStateController.getCurrentState() == GameState.EXPLORING) {
             switch (code) {
@@ -121,16 +121,16 @@ public class InputController {
                     break;
             }
         }
-        event.consume();
+        theEvent.consume();
     }
 
     /**
      * Handles input during combat mode.
      *
-     * @param code The key code pressed
+     * @param theCode The key code pressed
      */
-    private void handleCombatInput(KeyCode code) {
-        switch (code) {
+    private void handleCombatInput(final KeyCode theCode) {
+        switch (theCode) {
             case A:
                 // Regular attack
                 myGameController.playerAttack();
@@ -160,10 +160,10 @@ public class InputController {
     /**
      * Handles input during inventory mode.
      *
-     * @param code The key code pressed
+     * @param theCode The key code pressed
      */
-    private void handleInventoryInput(KeyCode code) {
-        switch (code) {
+    private void handleInventoryInput(final KeyCode theCode) {
+        switch (theCode) {
             case UP:
             case W:
                 // Scroll inventory up
@@ -193,10 +193,10 @@ public class InputController {
     /**
      * Handles input when interacting with a chest.
      *
-     * @param code The key code pressed
+     * @param theCode The key code pressed
      */
-    private void handleChestInput(KeyCode code) {
-        switch (code) {
+    private void handleChestInput(final KeyCode theCode) {
+        switch (theCode) {
             case E:
             case ENTER:
                 // Open chest and collect items

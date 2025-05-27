@@ -31,7 +31,7 @@ public abstract class Item extends DungeonElement {
      *
      * @param theHero The hero that is using the item.
      */
-    public abstract void use(Hero theHero);
+    public abstract void use(final Hero theHero);
 
     /**
      * Implementation of the interact method from DungeonElement.

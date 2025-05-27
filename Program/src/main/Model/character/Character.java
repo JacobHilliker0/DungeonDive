@@ -7,14 +7,14 @@ public abstract class Character {
     private int health;
     private Point position;
 
-    public Character(int health, Point position) {
+    public Character(final int health, final Point position) {
         this.health = health;
         this.position = position;
     }
 
-    public abstract int attack(Character target);
+    public abstract int attack(final Character target);
 
-    public void takeDamage(int damage) {
+    public void takeDamage(final int damage) {
         this.health = Math.max(0, this.health - damage);
     }
 
@@ -22,7 +22,7 @@ public abstract class Character {
         return health > 0;
     }
 
-    public void move(Direction direction) {
+    public void move(final Direction direction) {
         switch (direction) {
             case NORTH:
                 position = new Point(position.getX(), position.getY() - 1);
@@ -47,11 +47,11 @@ public abstract class Character {
         return position;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(final int health) {
         this.health = health;
     }
 
-    public void setPosition(Point position) {
+    public void setPosition(final Point position) {
         this.position = position;
     }
 }

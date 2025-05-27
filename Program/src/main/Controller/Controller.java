@@ -40,21 +40,21 @@ public class Controller {
         return myGameModel;
     }
 
-    public void newGame(ActionEvent theEvent, GameUI theUI) {
+    public void newGame(final ActionEvent theEvent, final GameUI theUI) {
         theUI.showHeroSelection();
     }
 
-    public void savedGames(ActionEvent theEvent, GameUI theUI) {
+    public void savedGames(final ActionEvent theEvent, final GameUI theUI) {
         theUI.showSavesScreen();
     }
 
-    public void exitProgram(ActionEvent theEvent) {
+    public void exitProgram(final ActionEvent theEvent) {
         System.exit(0);
     }
 
-    public void setHeroName(String heroNameInput) {
-        if (heroNameInput != null && !heroNameInput.trim().isEmpty()) {
-            this.myHeroName = heroNameInput.trim();
+    public void setHeroName(final String theHeroNameInput) {
+        if (theHeroNameInput != null && !theHeroNameInput.trim().isEmpty()) {
+            this.myHeroName = theHeroNameInput.trim();
             this.myNameSet = true;
             System.out.println("Hero name set to: " + this.myHeroName);
         } else {
@@ -64,8 +64,8 @@ public class Controller {
         }
     }
 
-    public void linkHeroNameField(TextField heroNameField) {
-        this.myHeroNameField = heroNameField;
+    public void linkHeroNameField(final TextField theHeroNameField) {
+        this.myHeroNameField = theHeroNameField;
         if (this.myHeroNameField != null) {
             this.myHeroNameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 setHeroName(newValue);
@@ -74,9 +74,9 @@ public class Controller {
         }
     }
 
-    public void heroDescription(int heroType, Label theDescription) {
+    public void heroDescription(final int theHeroType, final Label theDescription) {
         HeroType selectedHeroType = null;
-        switch (heroType) {
+        switch (theHeroType) {
             case 1: selectedHeroType = HeroType.WARRIOR; break;
             case 2: selectedHeroType = HeroType.PRIESTESS; break;
             case 3: selectedHeroType = HeroType.THIEF; break;
@@ -88,8 +88,8 @@ public class Controller {
         theDescription.setText(selectedHeroType.getDescription());
     }
 
-    public void startGame(ActionEvent theEvent, GameUI theUI,
-                          ToggleGroup theHeroes) {
+    public void startGame(final ActionEvent theEvent, final GameUI theUI,
+                          final ToggleGroup theHeroes) {
 
         if (myHeroNameField != null) {
             setHeroName(myHeroNameField.getText());
@@ -123,19 +123,29 @@ public class Controller {
 
     // This maybe should go in GameController, but pauseGame was here so I put
     // this here as well (it also pauses the game). Not sure if that was the best choice.
-    public void helpMenu(ActionEvent theEvent, GameUI theUI) {
+    public void helpMenu(final ActionEvent theEvent, final GameUI theUI) {
         theUI.showHelpMenu();
     }
 
-    public void pauseGame(ActionEvent theEvent, GameUI theUI) {
+    public void pauseGame(final ActionEvent theEvent, final GameUI theUI) {
         theUI.showPauseMenu();
     }
 
-    public void resumeCurrentGame(GameUI theUI) {
-        theUI.showGameScreen(); // This will re-attach key listeners via GameUI.showGameScreen()
+    public void resumeCurrentGame(final GameUI theUI) {
+        // This checks if the player was previously in combat, so the proper
+        // screen is shown.
+        if (myStateController.isInState(StateController.GameState.COMBAT)) {
+            // This line of code I wrote might be horrible, but because showCombatScreen
+            // has special parameters I had to use a ton of get methods to find all
+            // the data needed for it to work.
+            theUI.showCombatScreen(myGameModel.getDungeon().
+                    getRoom(myGameModel.getPlayer().getPosition()).getMonsters());
+        } else {
+            theUI.showGameScreen(); // This will re-attach key listeners via GameUI.showGameScreen()
+        }
     }
 
-    public void quitToMenu(GameUI theUI) {
+    public void quitToMenu(final GameUI theUI) {
         myGameModel.resetGame();
         // Nullify game-specific controllers as they are tied to a game session
         myGameController = null;
@@ -144,7 +154,7 @@ public class Controller {
         theUI.showIntroScreen();
     }
 
-    private HeroType getHeroTypeFromToggle(ToggleGroup theHeroes) {
+    private HeroType getHeroTypeFromToggle(final ToggleGroup theHeroes) {
         if (theHeroes.getSelectedToggle() == null) return null;
 
         RadioButton selectedButton = (RadioButton) theHeroes.getSelectedToggle();
@@ -166,7 +176,7 @@ public class Controller {
      * This should be called when a new game starts or a game is loaded.
      * @param theUI GameUI reference.
      */
-    private void initializeGameControllers(GameUI theUI) {
+    private void initializeGameControllers(final GameUI theUI) {
         // Initialize StateController first
         myStateController = new StateController();
 
@@ -178,6 +188,7 @@ public class Controller {
 
         System.out.println("Game controllers initialized.");
         theUI.setInputController(myInputController);
+
 
         // For testing - remove later
         // myGameController.printStatus();
@@ -195,4 +206,7 @@ public class Controller {
     public GameController getGameController() {
         return myGameController;
     }
+
+    public StateController getStateController() {return myStateController; }
+
 }

@@ -149,7 +149,7 @@ public class Dungeon {
     /**
      * Helper to find all *unvisited* neighbors for DFS.
      */
-    private List<Point> getUnvisitedNeighbors(Point current, boolean[][] visited) {
+    private List<Point> getUnvisitedNeighbors(final Point current, final boolean[][] visited) {
         List<Point> neighbors = new ArrayList<>();
         int x = current.getX();
         int y = current.getY();
@@ -169,7 +169,7 @@ public class Dungeon {
     /**
      * Helper to find *all* neighbors (for adding loops).
      */
-    private List<Point> getAllNeighbors(Point current) {
+    private List<Point> getAllNeighbors(final Point current) {
         List<Point> neighbors = new ArrayList<>();
         int x = current.getX();
         int y = current.getY();
@@ -186,7 +186,7 @@ public class Dungeon {
     /**
      * Helper to "remove a wall" between two adjacent rooms by setting their door flags.
      */
-    private void removeWall(Point current, Point next) {
+    private void removeWall(final Point current, final Point next) {
         Room currentRoom = getRoom(current);
         Room nextRoom = getRoom(next);
 

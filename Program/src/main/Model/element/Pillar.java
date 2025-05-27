@@ -42,6 +42,8 @@ public class Pillar extends DungeonElement {
             myIsActivated = true;
             System.out.println(theHero.getName() + " activated the Pillar of " + myType.getDisplayName() + "!");
             applyBuff(theHero);
+            // Added this here to increment pillar count, myPillarsActivated was staying zero.
+            theHero.setPillarsActivated(theHero.getPillarsActivated() + 1);
         } else {
             System.out.println("The Pillar of " + myType.getDisplayName() + " is already activated.");
         }

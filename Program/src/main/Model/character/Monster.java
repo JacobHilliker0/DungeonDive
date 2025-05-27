@@ -23,7 +23,8 @@ public class Monster extends Character {
      * @param health Initial health points
      * @param position Starting position
      */
-    public Monster(String name, MonsterType type, boolean isElite, int health, Point position) {
+    public Monster(final String name, final MonsterType type, final boolean isElite,
+                   final int health, final Point position) {
         super(health, position);
         this.myMaxHealth = health;
         this.name = name;
@@ -38,7 +39,7 @@ public class Monster extends Character {
      * @return The damage dealt
      */
     @Override
-    public int attack(Character target) {
+    public int attack(final Character target) {
         // Use base damage from MonsterType
         int baseDamage = this.type.getBaseAttack(); // <-- Use MonsterType for base damage
 
@@ -65,7 +66,7 @@ public class Monster extends Character {
      * Add a reward item to this monster's drop list.
      * @param item The item to add as reward
      */
-    public void addReward(Item item) {
+    public void addReward(final Item item) {
         rewards.add(item);
     }
 
@@ -74,7 +75,7 @@ public class Monster extends Character {
         return isElite;
     }
 
-    public void setElite(boolean isElite) {
+    public void setElite(final boolean isElite) {
         this.isElite = isElite;
     }
 
