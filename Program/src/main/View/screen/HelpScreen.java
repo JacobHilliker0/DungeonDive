@@ -17,32 +17,105 @@ import main.View.GameUI;
 
 import java.io.InputStream;
 
+/**
+ * The HelpScreen class displays game instructions and controls to assist players.
+ * This screen provides comprehensive information about game objectives, movement controls,
+ * combat mechanics, and inventory management. It features a responsive design that
+ * adapts to different screen sizes while maintaining visual consistency with other
+ * game screens.
+ *
+ * <p>The help screen includes:</p>
+ * <ul>
+ *   <li>Game objective explanation</li>
+ *   <li>Movement controls for dungeon exploration</li>
+ *   <li>Combat controls and mechanics</li>
+ *   <li>Inventory management instructions</li>
+ *   <li>Navigation buttons to resume game or activate cheats</li>
+ * </ul>
+ *
+ * <p>The screen uses a brick wall background for thematic consistency and
+ * the custom PixelFont for retro gaming aesthetics.</p>
+ *
+ * @author Jacob Hilliker
+ * @author Emanuel Feria
+ * @author Vladyslav Glavatskyi
+ * @version 6/10/2025
+ * @see Screen
+ * @see GameUI
+ * @see Controller
+ */
 public class HelpScreen extends Screen {
 
-    // Style constants to match Intro/Hero Selection
+    // ====== FONT SIZE CONSTANTS ======
+    /** Font size for the main title text */
     private static final int TITLE_FONT_SIZE = 45;
+
+    /** Font size for section subtitle headers */
     private static final int SUBTITLE_FONT_SIZE = 22;
+
+    /** Font size for content body text */
     private static final int CONTENT_FONT_SIZE = 18;
+
+    /** Font size for navigation buttons */
     private static final int BUTTON_FONT_SIZE = 28;
 
+    // ====== SPACING CONSTANTS ======
+    /** Vertical spacing between major content sections */
     private static final int CONTENT_SPACING = 30;
+
+    /** Vertical spacing between subsections within content areas */
     private static final int SECTION_SPACING = 20;
 
+    // ====== RESOURCE PATHS ======
+    /** Path to the custom pixel font used throughout the application */
     private static final String FONT_PATH = "/main/View/fonts/PixelFont.ttf";
+
+    /** Path to the brick wall background image */
     private static final String BACKGROUND_PATH = "/sprites/backgrounds/brick_wall_background.png";
+
+    /** CSS style string for drop shadow effects */
     private static final String SHADOW_STYLE = "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0.5, 4, 4);";
 
-    // Colors
+    // ====== COLOR CONSTANTS ======
+    /** Background color for content panels (semi-transparent dark gray) */
     private static final String PANEL_COLOR = "rgba(42, 42, 42, 0.9)";
+
+    /** Border color for panels and UI elements (brown/bronze theme) */
     private static final String BORDER_COLOR = "#8B4513";
+
+    /** Primary text color (light gray) */
     private static final String TEXT_COLOR = "#E0E0E0";
+
+    /** Accent color for subtitles and highlights (golden/yellow) */
     private static final String SUBTITLE_COLOR = "#DAA520";
 
-
+    /**
+     * Constructs a new HelpScreen instance.
+     *
+     * @param thePrimaryStage The main application stage that will host this screen.
+     *                       Must not be null.
+     * @param theController   The main controller instance for handling user interactions
+     *                       and game state management. Must not be null.
+     * @throws IllegalArgumentException if either parameter is null (inherited from Screen)
+     */
     public HelpScreen(final Stage thePrimaryStage, final Controller theController) {
         super(thePrimaryStage, theController);
     }
 
+    /**
+     * Displays the help screen with comprehensive game instructions and controls.
+     * This method creates and configures the complete UI layout including:
+     * - Title section with styled text
+     * - Scrollable content area with game instructions
+     * - Navigation buttons for user actions
+     *
+     * <p>The screen is designed to be responsive and will scale appropriately
+     * to different window sizes while maintaining readability and visual appeal.</p>
+     *
+     * @param theUI The GameUI instance used for screen transitions and
+     *              coordinating with other parts of the application.
+     *              Must not be null.
+     */
     @Override
     public void showScreen(final GameUI theUI) {
         // Use a StackPane to hold the content and apply scaling
@@ -77,6 +150,14 @@ public class HelpScreen extends Screen {
         getStage().show();
     }
 
+    /**
+     * Sets up the background styling for the help screen.
+     * Attempts to load the brick wall background image from resources.
+     * If the image cannot be loaded, falls back to a solid color background.
+     *
+     * @param root The root StackPane that will receive the background styling.
+     *             Must not be null.
+     */
     private void setupBackground(StackPane root) {
         try (InputStream bgStream = getClass().getResourceAsStream(BACKGROUND_PATH)) {
             if (bgStream != null) {
@@ -95,6 +176,13 @@ public class HelpScreen extends Screen {
         }
     }
 
+    /**
+     * Creates the title section containing the main "GAME INSTRUCTIONS" header.
+     * The title uses the custom PixelFont with appropriate styling including
+     * drop shadow effects for visual appeal.
+     *
+     * @return A VBox containing the styled title text, properly aligned and padded.
+     */
     private VBox createTitleSection() {
         VBox titleSection = new VBox();
         titleSection.setAlignment(Pos.CENTER);
@@ -111,6 +199,20 @@ public class HelpScreen extends Screen {
         return titleSection;
     }
 
+    /**
+     * Creates the main content area containing all game instructions.
+     * This method builds a scrollable pane that includes sections for:
+     * - Game objective
+     * - Movement controls
+     * - Combat controls
+     * - Inventory controls
+     *
+     * <p>The content is organized in clearly separated sections with
+     * appropriate styling and formatting for readability.</p>
+     *
+     * @return A ScrollPane containing all instruction content with proper
+     *         styling and scroll behavior configured.
+     */
     private ScrollPane createContentArea() {
         VBox contentContainer = new VBox(SECTION_SPACING);
         contentContainer.setAlignment(Pos.TOP_LEFT);
@@ -167,6 +269,18 @@ public class HelpScreen extends Screen {
         return scrollPane;
     }
 
+    /**
+     * Creates a content section with a title and body text.
+     * This is a utility method for generating consistent formatting
+     * across all instruction sections.
+     *
+     * @param title   The section title (e.g., "COMBAT CONTROLS").
+     *                Must not be null.
+     * @param content The section content text. Can contain newlines
+     *                for formatting. Must not be null.
+     * @return A VBox containing the formatted title and content labels
+     *         with appropriate styling applied.
+     */
     private VBox createContentSection(String title, String content) {
         VBox section = new VBox(10);
         section.setAlignment(Pos.TOP_LEFT);
@@ -190,6 +304,20 @@ public class HelpScreen extends Screen {
         return section;
     }
 
+    /**
+     * Creates the button section containing navigation and action buttons.
+     * This section includes:
+     * - Resume Game button: Returns the player to the active game
+     * - Vision Cheat button: Activates the dungeon vision cheat for debugging/assistance
+     *
+     * <p>Both buttons use the standardized styling from the Screen superclass
+     * for consistency with other screens in the application.</p>
+     *
+     * @param theUI The GameUI instance needed for button action handlers
+     *              and screen transitions. Must not be null.
+     * @return A VBox containing the styled navigation buttons with
+     *         appropriate event handlers configured.
+     */
     private VBox createButtonSection(GameUI theUI) {
         VBox buttonSection = new VBox();
         buttonSection.setAlignment(Pos.CENTER);
@@ -199,6 +327,8 @@ public class HelpScreen extends Screen {
         Font buttonFont = loadFont(FONT_PATH, BUTTON_FONT_SIZE, "Courier New");
         Button resumeGameButton = createStyledButton("RESUME GAME ", buttonFont);
         Button activateCheatButton = createStyledButton("VISION CHEAT", buttonFont);
+
+        // Configure button actions
         resumeGameButton.setOnAction(event -> getController().resumeCurrentGame(theUI));
         activateCheatButton.setOnAction(event -> getController().getGameController().activateDungeonVisionCheat());
 

@@ -1,7 +1,6 @@
 package main.View.screen;
 
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import main.Controller.Controller;
 import main.View.GameUI;
 import javafx.geometry.Insets;

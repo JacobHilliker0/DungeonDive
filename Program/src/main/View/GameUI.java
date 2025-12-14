@@ -92,6 +92,7 @@ public class GameUI {
         winScreen.showScreen(this);
     }
 
+
     public void showLoseScreen() {
         myGameScreen.stopGameLoop();
         LoseScreen loseScreen = new LoseScreen(myPrimaryStage, myController);
@@ -109,42 +110,32 @@ public class GameUI {
         System.out.println("Combat screen shown with " + theMonsters.size() + " monsters");
     }
 
-//    /**
-//     * Shows combat screen with given monster.
-//     *
-//     * @param monsters The list of monsters the player is fighting
-//     */
-//    public void showCombatScreen(List<Monster> monsters) {
-//        CombatScreen combatScreen = new CombatScreen(myPrimaryStage, myController);
-//        combatScreen.showScreen(this, monsters); // Use the overloaded method
-//        System.out.println("Combat screen shown with " + monsters.size() + " monsters");
-//    }
-
     public void showGameScreen() {
         myGameScreen.showScreen(this);
         attachKeyListenersToScene();
         System.out.println("Game screen shown.");
     }
 
+    /**
+     * Gets the main controller instance.
+     * @return The main controller.
+     */
     public Controller getController() {
         return myController;
     }
 
-    public Stage getPrimaryStage() {
-        return myPrimaryStage;
-    }
-
+    /**
+     * Gets the game screen instance.
+     * @return The game screen.
+     */
     public GameScreen getGameScreen() {
         return myGameScreen;
-    }
-
-    public void setGameScreen(final GameScreen theGameScreen) {
-        this.myGameScreen = theGameScreen;
     }
 
     /**
      * Sets the input controller and attaches its listeners to the current scene.
      * This method should be called after a scene that requires input (like GameScreen) is set on the stage.
+     *
      * @param theInputController The input controller for game actions.
      */
     public void setInputController(final InputController theInputController) {
@@ -176,20 +167,6 @@ public class GameUI {
             currentScene.getRoot().requestFocus(); // Ensure focus for key events
         } else {
             System.err.println("GameUI: Cannot attach key listeners - Scene or InputController is null.");
-        }
-    }
-
-    /**
-     * updates the player's position on game screen
-     * called after player movement to refresh the UI.
-     */
-    public void updatePlayerPosition() {
-        //get current scene and update player position visual
-        Scene currentScene = myPrimaryStage.getScene();
-        if (currentScene != null) {
-            //update player's visual position on game map
-            //this would involve updating a player indicator
-            System.out.println("Player position updated in UI");
         }
     }
 
@@ -306,14 +283,6 @@ public class GameUI {
     }
 
     /**
-     * Updates the display of collected pillars.
-     */
-    public void updatePillarCollection() {
-        // Update the UI to show which pillars have been collected
-        System.out.println("Pillar collection display updated");
-    }
-
-    /**
      * Shows the effect of a trap when triggered.
      *
      * @param theTrap The trap that was triggered
@@ -375,14 +344,6 @@ public class GameUI {
     }
 
     /**
-     * Shows the level up screen.
-     */
-    public void showLevelUpScreen() {
-        // Display level up interface
-        System.out.println("Level up screen shown");
-    }
-
-    /**
      * Updates the room description display.
      *
      * @param theRoom The room to describe
@@ -396,7 +357,7 @@ public class GameUI {
      * Shows a monster attack effect.
      *
      * @param theMonster The monster that attacked
-     * @param theDamage The amount of damage dealt
+     * @param theDamage  The amount of damage dealt
      */
     public void showMonsterAttackEffect(final Monster theMonster, final int theDamage) {
         // Display visual effects for monster attack
@@ -404,15 +365,7 @@ public class GameUI {
     }
 
     /**
-     * Hides all overlay screens.
-     */
-    public void hideAllOverlays() {
-        // Hide all overlay screens (inventory, combat, etc.)
-        System.out.println("All overlay screens hidden");
-    }
-
-    /**
-     *shows message when a pillar is activated
+     * shows message when a pillar is activated
      *
      * @param thePillar pillar that was activated
      */
@@ -420,8 +373,6 @@ public class GameUI {
         //display message about activating pillar and stat bonus
         System.out.println("Pillar of " + thePillar.getType().getDisplayName() +
                 " activated! " + thePillar.getType().getDescription());
-
-        // This would involve showing special effect
     }
 
     /**
@@ -443,23 +394,4 @@ public class GameUI {
             System.err.println("Cannot update player stats: Player is null");
         }
     }
-
-
-
-
-
-
-
-    public InputController getInputController() {
-        return myInputController;
-    }
-
-    /**
-     * Updates the combat screen display
-     */
-    public void updateCombatDisplay() {
-        // This would be called on the current combat screen instance
-        System.out.println("Combat display updated");
-    }
 }
-

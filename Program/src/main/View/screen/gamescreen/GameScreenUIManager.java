@@ -20,28 +20,71 @@ import main.View.GameUI;
 import java.io.InputStream;
 import java.util.Objects;
 
+/**
+ * Manages all UI elements and layout for the game screen.
+ * This class is responsible for creating, organizing, and updating all
+ * user interface components including panels, stats displays, buttons,
+ * messaging system, and visual effects.
+ *
+ * Main responsibilities:
+ * - Creating responsive UI layout with left/center/right panels
+ * - Managing player statistics display with icons
+ * - Handling character portrait rendering
+ * - Creating and updating minimap display
+ * - Managing game messages and scrolling
+ * - Providing damage flash effects
+ * - Coordinating with theme and responsive dimension systems
+ *
+ * @author Jacob Hilliker
+ * @author Emanuel Feria
+ * @author Vladyslav Glavatskyi
+ * @version 6/13/2025
+ */
 public class GameScreenUIManager {
+
+    /** The main controller for accessing game state */
     private final Controller controller;
+
+    /** Theme provider for consistent styling */
     private final GameScreenTheme theme;
+
+    /** Responsive dimensions manager */
     private GameScreenResponsiveDimensions responsiveDims;
+
+    /** Main game renderer */
     private final GameScreenRenderer renderer;
+
+    /** Minimap renderer */
     private final GameScreenMinimapRenderer minimapRenderer;
+
+    /** Character portrait renderer */
     private final GameScreenPortraitRenderer portraitRenderer;
 
-
-    // UI Components
+    // UI Components for player statistics
     private Label playerHealthLabel;
     private Label playerManaLabel;
     private Label playerAttackLabel;
     private Label playerGoldLabel;
     private Label playerPillarsLabel;
+
+    // Message system components
     private VBox messagesArea;
     private ScrollPane messageScrollPane;
     private VBox messageContainer;
+
+    // Visual effects
     private Pane damageFlashOverlay;
+
+    // Canvas components
     private Canvas minimapCanvas;
     private Canvas portraitCanvas;
 
+    /**
+     * Constructs a new UI manager with the required dependencies.
+     *
+     * @param controller The main controller for accessing game state
+     * @param renderer The main game renderer
+     */
     public GameScreenUIManager(Controller controller, GameScreenRenderer renderer) {
         this.controller = controller;
         this.renderer = renderer;
@@ -50,11 +93,23 @@ public class GameScreenUIManager {
         this.portraitRenderer = new GameScreenPortraitRenderer(controller);
     }
 
+    /**
+     * Initializes the UI manager with the provided scene.
+     * Sets up responsive dimensions and creates damage flash overlay.
+     *
+     * @param scene The scene to initialize UI components for
+     */
     public void initialize(Scene scene) {
         this.responsiveDims = new GameScreenResponsiveDimensions(scene);
         createDamageFlashOverlay(scene);
     }
 
+    /**
+     * Sets up the themed background for the root container.
+     * Attempts to load background image with fallback to solid color.
+     *
+     * @param root The root BorderPane to apply background to
+     */
     public void setupThemedBackground(BorderPane root) {
         try (InputStream bgStream = getClass().getResourceAsStream(theme.getBackgroundPath())) {
             if (bgStream != null) {
@@ -67,6 +122,12 @@ public class GameScreenUIManager {
         }
     }
 
+    /**
+     * Creates the main game area layout with three panels.
+     *
+     * @param gameUI The GameUI instance for button actions
+     * @return HBox containing the complete main game area
+     */
     public HBox createMainGameArea(GameUI gameUI) {
         HBox mainGameArea = new HBox();
         mainGameArea.setStyle(theme.getMainGameAreaStyle());
@@ -85,6 +146,11 @@ public class GameScreenUIManager {
         return mainGameArea;
     }
 
+    /**
+     * Creates the left panel containing player stats and portrait.
+     *
+     * @return VBox containing the left panel elements
+     */
     private VBox createLeftPanel() {
         VBox leftPanel = createThemedPanel();
 
@@ -97,6 +163,11 @@ public class GameScreenUIManager {
         return leftPanel;
     }
 
+    /**
+     * Creates the player statistics display box with icons and values.
+     *
+     * @return VBox containing all player stat displays
+     */
     private VBox createPlayerStatsBox() {
         VBox statsBox = new VBox();
         statsBox.spacingProperty().bind(responsiveDims.getPanelPaddingBinding().divide(3));
@@ -121,6 +192,13 @@ public class GameScreenUIManager {
         return statsBox;
     }
 
+    /**
+     * Creates a stat display box with icon and label.
+     *
+     * @param iconPath Path to the icon image resource
+     * @param valueLabel Label to display the stat value
+     * @return HBox containing the complete stat display
+     */
     private HBox createStatBox(String iconPath, Label valueLabel) {
         Image iconImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(iconPath)));
         ImageView iconView = new ImageView(iconImage);
@@ -143,6 +221,11 @@ public class GameScreenUIManager {
         return statBox;
     }
 
+    /**
+     * Creates a themed label for stat values.
+     *
+     * @return Configured Label for displaying stat values
+     */
     private Label createThemedStatLabel() {
         Label label = new Label();
         label.fontProperty().bind(Bindings.createObjectBinding(() ->
@@ -156,6 +239,11 @@ public class GameScreenUIManager {
         return label;
     }
 
+    /**
+     * Creates the character portrait section.
+     *
+     * @return VBox containing the character portrait canvas
+     */
     private VBox createCharacterPortrait() {
         VBox portraitSection = new VBox();
         portraitSection.setAlignment(Pos.CENTER);
@@ -178,6 +266,11 @@ public class GameScreenUIManager {
         return portraitSection;
     }
 
+    /**
+     * Creates the center area containing the title and game canvas.
+     *
+     * @return VBox containing the center area elements
+     */
     private VBox createCenterArea() {
         VBox centerArea = new VBox();
         centerArea.setAlignment(Pos.CENTER);
@@ -191,6 +284,11 @@ public class GameScreenUIManager {
         return centerArea;
     }
 
+    /**
+     * Creates a container for the game canvas with styling.
+     *
+     * @return StackPane containing the styled canvas container
+     */
     private StackPane createCanvasContainer() {
         Canvas roomCanvas = renderer.getRoomCanvas();
         StackPane canvasContainer = new StackPane(roomCanvas);
@@ -207,6 +305,11 @@ public class GameScreenUIManager {
         return canvasContainer;
     }
 
+    /**
+     * Creates the themed title box with game title.
+     *
+     * @return VBox containing the styled title elements
+     */
     private VBox createThemedTitleBox() {
         VBox titleBox = new VBox(10);
         titleBox.spacingProperty().bind(responsiveDims.getPanelPaddingBinding().divide(2));
@@ -233,6 +336,12 @@ public class GameScreenUIManager {
         return titleBox;
     }
 
+    /**
+     * Creates the right panel containing minimap and buttons.
+     *
+     * @param gameUI The GameUI instance for button actions
+     * @return VBox containing the right panel elements
+     */
     private VBox createRightPanel(GameUI gameUI) {
         VBox rightPanel = createThemedPanel();
 
@@ -251,6 +360,11 @@ public class GameScreenUIManager {
         return rightPanel;
     }
 
+    /**
+     * Creates a themed panel with consistent styling and responsive properties.
+     *
+     * @return VBox configured as a themed panel
+     */
     private VBox createThemedPanel() {
         VBox panel = new VBox();
         panel.setAlignment(Pos.TOP_CENTER);
@@ -265,6 +379,12 @@ public class GameScreenUIManager {
         return panel;
     }
 
+    /**
+     * Creates a themed button with consistent styling and responsive properties.
+     *
+     * @param text The text to display on the button
+     * @return Button configured with theme styling
+     */
     private Button createThemedButton(String text) {
         Button button = new Button(text);
         button.setTextFill(Color.WHITE);
@@ -290,6 +410,9 @@ public class GameScreenUIManager {
         return button;
     }
 
+    /**
+     * Creates the message area components for displaying game messages.
+     */
     public void createMessageArea() {
         messageContainer = createThemedMessageContainer();
         messagesArea = createMessagesArea();
@@ -297,6 +420,11 @@ public class GameScreenUIManager {
         messageContainer.getChildren().add(messageScrollPane);
     }
 
+    /**
+     * Creates the themed container for messages.
+     *
+     * @return VBox configured for message display
+     */
     private VBox createThemedMessageContainer() {
         VBox container = new VBox();
         container.setStyle(theme.getMessageContainerStyle());
@@ -306,6 +434,11 @@ public class GameScreenUIManager {
         return container;
     }
 
+    /**
+     * Creates the messages area for holding individual message labels.
+     *
+     * @return VBox configured for message content
+     */
     private VBox createMessagesArea() {
         VBox area = new VBox();
         area.spacingProperty().bind(responsiveDims.getPanelPaddingBinding().divide(2));
@@ -316,6 +449,11 @@ public class GameScreenUIManager {
         return area;
     }
 
+    /**
+     * Creates the scroll pane for messages.
+     *
+     * @return ScrollPane configured for message scrolling
+     */
     private ScrollPane createMessageScrollPane() {
         ScrollPane scrollPane = new ScrollPane(messagesArea);
         scrollPane.setFitToWidth(true);
@@ -331,6 +469,11 @@ public class GameScreenUIManager {
         return scrollPane;
     }
 
+    /**
+     * Creates the damage flash overlay for visual feedback.
+     *
+     * @param scene The scene to bind overlay dimensions to
+     */
     private void createDamageFlashOverlay(Scene scene) {
         damageFlashOverlay = new Pane();
         damageFlashOverlay.setStyle("-fx-background-color: rgba(255, 0, 0, 0.4);");
@@ -341,9 +484,19 @@ public class GameScreenUIManager {
         damageFlashOverlay.prefHeightProperty().bind(scene.heightProperty());
     }
 
+    /**
+     * Sets up responsive bindings for UI elements.
+     * This method can be used to establish additional responsive behaviors.
+     */
     public void setupResponsiveBindings() {
+        // Additional responsive bindings can be added here if needed
     }
 
+    /**
+     * Adds a new message to the game message display.
+     *
+     * @param message The message text to display
+     */
     public void addGameMessage(String message) {
         if (messagesArea == null || messageScrollPane == null) return;
 
@@ -356,6 +509,12 @@ public class GameScreenUIManager {
         javafx.application.Platform.runLater(() -> messageScrollPane.setVvalue(1.0));
     }
 
+    /**
+     * Creates a themed label for displaying messages.
+     *
+     * @param message The message text to display
+     * @return Label configured with message styling
+     */
     private Label createThemedMessageLabel(String message) {
         Label label = new Label("• " + message);
         label.fontProperty().bind(Bindings.createObjectBinding(() ->
@@ -371,6 +530,9 @@ public class GameScreenUIManager {
         return label;
     }
 
+    /**
+     * Updates the player statistics display with current values.
+     */
     public void updatePlayerStats() {
         Hero player = controller.getPlayer();
         if (player != null) {
@@ -384,18 +546,28 @@ public class GameScreenUIManager {
         }
     }
 
+    /**
+     * Updates the minimap display.
+     */
     public void updateMinimap() {
         if (minimapRenderer != null) {
             minimapRenderer.updateMinimap();
         }
     }
 
+    /**
+     * Updates the character portrait display.
+     */
     public void updateCharacterPortrait() {
         if (portraitRenderer != null) {
             portraitRenderer.updatePortraitCanvas();
         }
     }
 
+    /**
+     * Displays a damage flash effect across the screen.
+     * Creates a red flash animation to indicate the player has taken damage.
+     */
     public void flashDamageEffect() {
         if (damageFlashOverlay == null) {
             System.err.println("Warning: damageFlashOverlay is null, cannot show damage flash");
@@ -428,6 +600,9 @@ public class GameScreenUIManager {
         flashTimeline.play();
     }
 
+    /**
+     * Handles room change events by updating relevant UI components.
+     */
     public void onRoomChanged() {
         updateMinimap();
         updatePlayerStats();
@@ -436,6 +611,14 @@ public class GameScreenUIManager {
         }
     }
 
+    /**
+     * Loads a font from resources with fallback support.
+     *
+     * @param path Path to the font resource
+     * @param size Desired font size
+     * @param fallback Fallback font family name
+     * @return Font object with specified size
+     */
     private Font loadFont(String path, int size, String fallback) {
         try (InputStream fontStream = getClass().getResourceAsStream(path)) {
             if (fontStream != null) {
@@ -448,6 +631,23 @@ public class GameScreenUIManager {
         return Font.font(fallback, size);
     }
 
-    public VBox getMessageContainer() { return messageContainer; }
-    public Pane getDamageFlashOverlay() { return damageFlashOverlay; }
+    // Getter methods for accessing UI components
+
+    /**
+     * Gets the message container for external layout management.
+     *
+     * @return The message container VBox
+     */
+    public VBox getMessageContainer() {
+        return messageContainer;
+    }
+
+    /**
+     * Gets the damage flash overlay for external layout management.
+     *
+     * @return The damage flash overlay Pane
+     */
+    public Pane getDamageFlashOverlay() {
+        return damageFlashOverlay;
+    }
 }

@@ -108,6 +108,9 @@ public abstract class Screen {
 
     /**
      * Creates a styled button with a consistent look and feel.
+     * @param text The text for the button.
+     * @param font The font for the button text.
+     * @return A styled Button.
      */
     protected Button createStyledButton(String text, Font font) {
         Button button = new Button(text);
@@ -136,16 +139,30 @@ public abstract class Screen {
     }
 
 
+    /**
+     * Sets up a standard structure with a title and buttons in a BorderPane.
+     * @param theTitle The title text.
+     * @param theButtons The VBox containing the buttons.
+     * @param theRoot The root BorderPane.
+     */
     public void tripleButtonStructure(final Text theTitle, final VBox theButtons, final BorderPane theRoot) {
         VBox content = new VBox(80, theTitle, theButtons);
         content.setAlignment(Pos.CENTER);
         theRoot.setCenter(content);
     }
 
+    /**
+     * Gets the primary stage of the application.
+     * @return The primary stage.
+     */
     public Stage getStage() {
         return MY_PRIMARY_STAGE;
     }
 
+    /**
+     * Gets the main controller of the application.
+     * @return The main controller.
+     */
     public Controller getController() {
         return MY_CONTROLLER;
     }

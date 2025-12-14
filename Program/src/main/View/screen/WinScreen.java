@@ -1,7 +1,7 @@
-package main.View.screen; // Ensure this is your package structure
+package main.View.screen;
 
-import main.Controller.Controller; // Ensure correct import
-import main.View.GameUI;           // Ensure correct import
+import main.Controller.Controller;
+import main.View.GameUI;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -11,12 +11,13 @@ import javafx.stage.Stage;
 
 /**
  * Class for the WinScreen.
- * Displayed when the player successfully completes the game.
+ * This screen is displayed when the player successfully completes the game,
+ * offering congratulations and options to start a new game or exit.
  *
  * @author Jacob Hilliker
  * @author Emanuel Feria
  * @author Vladyslav Glavatskyi
- * @version 5/13/2025
+ * @version 6/10/2025
  */
 public class WinScreen extends Screen {
 
@@ -31,25 +32,29 @@ public class WinScreen extends Screen {
     }
 
     /**
-     * showScreen for the WinScreen.
+     * Sets up and displays the win screen.
+     * This method constructs a scene with a victory message and buttons for
+     * starting a new game or quitting.
      *
-     * @param theUI GameUI used for Observer ActionEvent stuff and screen transitions.
+     * @param theUI The GameUI instance used for screen transitions and button actions.
      */
     @Override
     public void showScreen(final GameUI theUI) {
         BorderPane root = new BorderPane();
-        Scene winScene = new Scene(root, 600, 500);
-        // Apply a stylesheet (option in the future)
-        // winScene.getStylesheets().add(getClass().getResource("/main/View/css/style.css").toExternalForm());
+        // Use default dimensions from the Screen superclass
+        Scene winScene = new Scene(root, BASE_WIDTH, BASE_HEIGHT);
+
+        // Apply a default background style
+        root.setStyle("-fx-background-color: #1a1a1a;");
 
         Text title = new Text("Congratulations! You Won!");
         title.setFont(Font.font("Verdana", 30));
-        title.setStyle("-fx-fill: green;"); // Make it stand out
+        title.setStyle("-fx-fill: limegreen; -fx-effect: dropshadow(gaussian, rgba(0,255,0,0.5), 10, 0, 0, 0);");
 
-        // Use the tripleButtonVBox from Screen superclass
-        VBox buttons = tripleButtonVBox(theUI); // Pass theUI for button actions
+        // Use the tripleButtonVBox from Screen superclass for consistent button layout
+        VBox buttons = tripleButtonVBox(theUI);
 
-        // Use the tripleButtonStructure from Screen superclass
+        // Use the tripleButtonStructure from Screen superclass to arrange title and buttons
         tripleButtonStructure(title, buttons, root);
 
         getStage().setScene(winScene);

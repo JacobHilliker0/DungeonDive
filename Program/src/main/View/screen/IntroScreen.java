@@ -16,6 +16,8 @@ import main.View.GameUI;
 /**
  * Class for the IntroScreen.
  * Displays the main menu with Dungeon Dive title and menu buttons.
+ * This screen serves as the entry point for the player, offering options
+ * to start a new game, load a saved game, or exit the application.
  *
  * @author Jacob Hilliker
  * @author Emanuel Feria
@@ -24,18 +26,35 @@ import main.View.GameUI;
  */
 public class IntroScreen extends Screen {
 
+    /** Font size for the main title text. */
     private static final int TITLE_FONT_SIZE = 72;
+    /** Font size for the menu buttons. */
     private static final int BUTTON_FONT_SIZE = 28;
+    /** Vertical spacing between the title and the button box. */
     private static final int CONTENT_SPACING = 80;
 
-    // Default dimensions if no scene exists yet
+    /** Default width for the scene if one does not already exist. */
     private static final double DEFAULT_WIDTH = 800.0;
+    /** Default height for the scene if one does not already exist. */
     private static final double DEFAULT_HEIGHT = 600.0;
 
+    /**
+     * Constructs an IntroScreen.
+     *
+     * @param thePrimaryStage The primary stage of the application.
+     * @param theController   The main controller for handling user actions.
+     */
     public IntroScreen(final Stage thePrimaryStage, final Controller theController) {
         super(thePrimaryStage, theController);
     }
 
+    /**
+     * Sets up and displays the introductory screen.
+     * This method builds the scene graph for the main menu, including the
+     * title, background, and action buttons, and then sets it on the primary stage.
+     *
+     * @param theUI The main GameUI instance, used for navigation.
+     */
     @Override
     public void showScreen(final GameUI theUI) {
         // Use a StackPane to hold the content and apply scaling
@@ -70,6 +89,13 @@ public class IntroScreen extends Screen {
         getStage().show();
     }
 
+    /**
+     * Sets the background for the main menu screen.
+     * It attempts to load a custom background image and falls back to a solid
+     * color if the image cannot be found.
+     *
+     * @param root The root pane to which the background style will be applied.
+     */
     private void setupBackground(VBox root) {
         try {
             root.setStyle("-fx-background-image: url('/sprites/backgrounds/brick_wall_background.png'); " +
@@ -82,6 +108,11 @@ public class IntroScreen extends Screen {
         }
     }
 
+    /**
+     * Creates the main title "DUNGEON DIVE" with custom font and styling.
+     *
+     * @return A VBox containing the styled title text elements.
+     */
     private VBox createTitle() {
         Font titleFont = loadFont("/main/View/fonts/PixelFont.ttf", TITLE_FONT_SIZE, "Impact");
         String shadowStyle = "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0.5, 4, 4);";
@@ -103,6 +134,12 @@ public class IntroScreen extends Screen {
         return titleBox;
     }
 
+    /**
+     * Creates the main menu buttons (New Game, Load Game, Quit).
+     *
+     * @param theUI The GameUI instance to which button actions will be delegated.
+     * @return A VBox containing the configured buttons.
+     */
     private VBox createButtons(GameUI theUI) {
         Font buttonFont = loadFont("/main/View/fonts/PixelFont.ttf", BUTTON_FONT_SIZE, "Courier New");
 

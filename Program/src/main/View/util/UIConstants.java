@@ -37,7 +37,10 @@ public class UIConstants {
         MY_GAME_UI = new GameUI(thePrimaryStage, theController);
     }
 
-    // If MY_GAME_UI needs to be accessed from outside, provide a getter
+    /**
+     * If MY_GAME_UI needs to be accessed from outside, provide a getter
+     * @return The GameUI instance.
+     */
     public GameUI getGameUI() {
         return MY_GAME_UI;
     }

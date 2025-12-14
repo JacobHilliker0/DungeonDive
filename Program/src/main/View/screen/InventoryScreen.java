@@ -28,6 +28,18 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 
+/**
+ * Manages the inventory UI, allowing players to view, select, and use items.
+ * This screen is displayed as a separate, themed window that overlays the main
+ * game screen. It features a responsive design that adapts to the main window's size,
+ * a scrollable list of items with icons, a detailed description area for the
+ * selected item, and keyboard controls for navigation and interaction.
+ *
+ * @author Jacob Hilliker
+ * @author Emanuel Feria
+ * @author Vladyslav Glavatskyi
+ * @version 6/13/2025
+ */
 public class InventoryScreen extends Screen {
 
     // ====== RESPONSIVE CONFIGURATION CONSTANTS ======
@@ -118,6 +130,12 @@ public class InventoryScreen extends Screen {
     private NumberBinding itemIconSizeBinding;
 
 
+    /**
+     * Constructs a new InventoryScreen.
+     *
+     * @param thePrimaryStage The primary stage of the application.
+     * @param theController The main controller for the application.
+     */
     public InventoryScreen(final Stage thePrimaryStage, final Controller theController) {
         super(thePrimaryStage, theController);
         myInventoryStage = new Stage();
@@ -125,6 +143,13 @@ public class InventoryScreen extends Screen {
         myInventoryStage.initOwner(getStage());
     }
 
+    /**
+     * Displays the inventory screen as a separate window, calculating its size
+     * relative to the main game window. It creates the layout, sets up event
+     * handlers, and positions the inventory window in the center of the main stage.
+     *
+     * @param theUI The main GameUI instance, used for coordinating screen transitions.
+     */
     @Override
     public void showScreen(final GameUI theUI) {
         // Calculate initial size based on the main window
@@ -378,6 +403,11 @@ public class InventoryScreen extends Screen {
 
     // ====== LOGIC METHODS ======
 
+    /**
+     * Refreshes the inventory display. This method is called when the
+     * inventory screen is activated to ensure it shows the most up-to-date
+     * information.
+     */
     public void onScreenActivated() {
         if (!isUIInitialized) {
             return;
@@ -385,6 +415,11 @@ public class InventoryScreen extends Screen {
         updateInventory();
     }
 
+    /**
+     * Updates the list of items displayed in the inventory. It clears the
+     * current list and repopulates it with items from the player's inventory.
+     * If the inventory is empty, a message is displayed.
+     */
     public void updateInventory() {
         if (MY_CONTROLLER.getPlayer() == null) return;
 
@@ -567,6 +602,13 @@ public class InventoryScreen extends Screen {
         }
     }
 
+    /**
+     * Updates the currently selected item in the inventory list. This method
+     * ensures the selection index is valid and then refreshes the display to
+     * reflect the change.
+     *
+     * @param newIndex The new index to select.
+     */
     public void updateSelection(int newIndex) {
         if (myCurrentInventory != null && !myCurrentInventory.isEmpty()) {
             mySelectedIndex = Math.max(0, Math.min(newIndex, myCurrentInventory.size() - 1));
@@ -592,6 +634,9 @@ public class InventoryScreen extends Screen {
         }
     }
 
+    /**
+     * Closes the inventory window.
+     */
     public void closeScreen() {
         myInventoryStage.close();
     }
